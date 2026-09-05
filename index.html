@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار حفظ وفهم – الصفحة الأولى من سورة البقرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEBDD;
+    --ink:#26302A;
+    --primary:#1F4B3F;
+    --accent:#A9812E;
+    --correct:#3C7A54;
+    --incorrect:#A23B2E;
+    --line:#D9D3BE;
+    --paper-2:#F7F5EC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Tajawal',sans-serif;
+    line-height:1.9;
+    padding:28px 14px 80px;
+  }
+  .sheet{
+    max-width:700px;
+    margin:0 auto;
+    background:var(--paper-2);
+    border-top:3px double var(--accent);
+    border-bottom:3px double var(--accent);
+    padding:34px 28px 44px;
+    position:relative;
+  }
+  .ornament{
+    width:8px;height:8px;
+    background:var(--accent);
+    transform:rotate(45deg);
+    margin:0 auto 18px;
+  }
+  h1{
+    font-family:'Amiri',serif;
+    font-size:1.7rem;
+    text-align:center;
+    margin:0 0 6px;
+    color:var(--primary);
+  }
+  .sub{
+    text-align:center;
+    color:#6b6558;
+    font-size:.92rem;
+    margin-bottom:28px;
+  }
+  .meta-row{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;
+    margin-bottom:26px;
+  }
+  .meta-row label{
+    font-size:.9rem;
+    color:#544f43;
+    display:block;
+    margin-bottom:4px;
+  }
+  .meta-row input{
+    font-family:'Tajawal',sans-serif;
+    border:none;
+    border-bottom:1px solid var(--line);
+    background:transparent;
+    padding:4px 2px;
+    font-size:.95rem;
+    color:var(--ink);
+    width:220px;
+  }
+  .meta-row input:focus{outline:none;border-color:var(--primary);}
+  section.part{
+    margin-bottom:8px;
+  }
+  .part-title{
+    font-family:'Amiri',serif;
+    font-weight:700;
+    color:var(--primary);
+    font-size:1.15rem;
+    margin:34px 0 14px;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  .q{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    transition:border-color .3s ease;
+  }
+  .q-prompt{
+    font-family:'Amiri',serif;
+    font-size:1.15rem;
+    margin-bottom:10px;
+  }
+  .q-num{
+    color:var(--accent);
+    font-weight:700;
+    margin-left:6px;
+  }
+  .q textarea, .q input[type=text]{
+    width:100%;
+    font-family:'Amiri',serif;
+    font-size:1.1rem;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:2px;
+    padding:9px 12px;
+    resize:vertical;
+    color:var(--ink);
+  }
+  .q textarea:focus, .q input[type=text]:focus{
+    outline:none;
+    border-color:var(--primary);
+  }
+  .feedback{
+    margin-top:10px;
+    font-size:.92rem;
+    display:none;
+    padding-right:10px;
+    border-right:3px solid transparent;
+  }
+  .feedback.show{display:block;}
+  .feedback .tag{
+    font-weight:700;
+    display:inline-block;
+    margin-bottom:3px;
+  }
+  .q.correct{border-right:3px solid var(--correct);}
+  .q.incorrect{border-right:3px solid var(--incorrect);}
+  .q.correct .feedback .tag{color:var(--correct);}
+  .q.incorrect .feedback .tag{color:var(--incorrect);}
+  .correct-ans{
+    font-family:'Amiri',serif;
+    color:var(--primary);
+  }
+  .actions{
+    display:flex;
+    gap:12px;
+    margin-top:34px;
+    justify-content:center;
+  }
+  button{
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    padding:12px 30px;
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  #gradeBtn{background:var(--primary);color:#fff;}
+  #gradeBtn:hover{background:#173a30;}
+  #resetBtn{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  #resetBtn:hover{border-color:var(--ink);}
+  #printBtn{background:transparent;color:var(--accent);border:1px solid var(--accent);}
+
+  #result{
+    display:none;
+    margin:0 0 30px;
+    text-align:center;
+    padding:22px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    opacity:0;
+    transform:translateY(-6px);
+    animation:reveal .5s ease forwards;
+  }
+  #result.show{display:block;}
+  @keyframes reveal{to{opacity:1;transform:translateY(0);}}
+  #result .score{
+    font-family:'Amiri',serif;
+    font-size:2.4rem;
+    color:var(--primary);
+    font-weight:700;
+  }
+  #result .pct{
+    color:var(--accent);
+    font-size:1.05rem;
+    margin-top:2px;
+  }
+  #result .note{
+    font-size:.9rem;
+    color:#6b6558;
+    margin-top:10px;
+  }
+  @media print{
+    body{background:#fff;padding:0;}
+    .sheet{border:none;padding:0;}
+    .actions{display:none;}
+    textarea,input[type=text]{border:none !important;background:transparent !important;}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="ornament"></div>
+  <h1>اختبار حفظ وفهم – الصفحة الأولى من سورة البقرة</h1>
+  <div class="sub">آيات 1 – 5</div>
+
+  <div class="meta-row">
+    <div>
+      <label>الاسم</label>
+      <input type="text" id="studentName" placeholder="...........................">
+    </div>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div id="result">
+    <div class="score" id="scoreText">0 / 20</div>
+    <div class="pct" id="pctText"></div>
+    <div class="note">التصحيح لا يدقّق على التشكيل أو الهمزات أو المدود، ويقبل الإجابات القريبة من الصواب.</div>
+  </div>
+
+  <div class="actions">
+    <button id="gradeBtn">صحّح الاختبار</button>
+    <button id="resetBtn" type="button">إعادة تعيين</button>
+    <button id="printBtn" type="button">طباعة / حفظ PDF</button>
+  </div>
+</div>
+
+<script>
+/* ============ تطبيع النص العربي ============ */
+function normalize(text){
+  if(!text) return '';
+  return text
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u08F0-\u08FF]/g,'') // تشكيل
+    .replace(/\u0640/g,'')                 // تطويل
+    .replace(/[إأآا]/g,'ا')                 // همزات الألف
+    .replace(/ى/g,'ي')                      // ألف مقصورة
+    .replace(/ة/g,'ه')                      // تاء مربوطة
+    .replace(/[ؤئء]/g,'')                   // الهمزات المفردة
+    .replace(/[﴿﴾۝.,،؟!:\-–—()]/g,' ')     // علامات ترقيم وأقواس قرآنية
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      if(a[i-1]===b[j-1]) dp[i][j]=dp[i-1][j-1];
+      else dp[i][j]=1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function wordsFuzzyMatch(w1,w2){
+  if(w1===w2) return true;
+  const ref = w2.length>=w1.length ? w2 : w1;
+  const threshold = ref.length<=3 ? 1 : Math.max(1,Math.floor(ref.length*0.28));
+  return levenshtein(w1,w2)<=threshold;
+}
+
+/* هل تحتوي إجابة الطالب على عبارة الهدف (بترتيبها، بتسامح إملائي) */
+function containsPhrase(answerNorm, phraseNorm){
+  const a = answerNorm.split(' ').filter(Boolean);
+  const p = phraseNorm.split(' ').filter(Boolean);
+  if(p.length===0) return false;
+  for(let i=0;i<=a.length-p.length;i++){
+    let ok=true;
+    for(let j=0;j<p.length;j++){
+      if(!wordsFuzzyMatch(a[i+j],p[j])){ok=false;break;}
+    }
+    if(ok) return true;
+  }
+  // كذلك اسمح بأن تكون كلمة الهدف موجودة كجزء من كلمة أطول (بادئات/لواحق كالواو والباء)
+  if(p.length===1){
+    return a.some(w => w.includes(p[0]) || (p[0].length>=3 && wordsFuzzyMatch(w,p[0])));
+  }
+  return false;
+}
+
+/* ============ بيانات الأسئلة ============ */
+const questions = [
+{part:'أولًا: أكمل قوله تعالى', id:1, type:'phrase',
+  prompt:'﴿الم ۝ ذَلِكَ ...﴾ .... إلى .... ﴿...هُدًى لِلْمُتَّقِينَ﴾',
+  accept:['لا ريب'], full:'ذَلِكَ الْكِتَابُ لَا رَيْبَ ۛفِيهِ ۛهُدًى لِلْمُتَّقِينَ'},
+
+{id:2, type:'phrase',
+  prompt:'﴿الَّذِينَ يُؤْمِنُونَ ...﴾ .... إلى .... ﴿...يُنفِقُونَ﴾',
+  accept:['بالغيب'], full:'الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنْفِقُونَ'},
+
+{id:3, type:'phrase',
+  prompt:'﴿وَالَّذِينَ يُؤْمِنُونَ ...﴾ .... إلى .... ﴿...هُمْ يُوقِنُونَ﴾',
+  accept:['بما انزل اليك','انزل اليك','بما انزل'],
+  full:'وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنْزِلَ إِلَيْكَ وَمَا أُنْزِلَ مِنْ قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ'},
+
+{id:4, type:'phrase',
+  prompt:'﴿أُولَئِكَ عَلَى ...﴾ .... إلى .... ﴿...هُمُ الْمُفْلِحُونَ﴾',
+  accept:['هدى'], full:'أُولَئِكَ عَلَى هُدًى مِنْ رَبِّهِمْ وَأُولَئِكَ هُمُ الْمُفْلِحُونَ'},
+
+{part:'ثانيًا: ما الكلمة التي جاءت...', id:5, type:'phrase',
+  prompt:'ما الكلمة التي جاءت بعد: ﴿لَا رَيْبَ﴾؟',
+  accept:['فيه'], full:'فِيهِ'},
+
+{id:6, type:'phrase',
+  prompt:'ما الكلمة التي جاءت قبل: ﴿يُنْفِقُونَ﴾؟',
+  accept:['رزقناهم','ومما رزقناهم'], full:'رَزَقْنَاهُمْ'},
+
+{id:7, type:'phrase',
+  prompt:'ما الكلمة التي جاءت بعد: ﴿مِنْ قَبْلِكَ﴾؟',
+  accept:['بالآخرة','وبالآخرة'], full:'وَبِالْآخِرَةِ'},
+
+{part:'ثالثًا: صحح الكلمة الخاطئة', id:8, type:'phrase',
+  prompt:'﴿ذَلِكَ الْكِتَابُ لَا شَكَّ فِيهِ هُدًى لِلْمُتَّقِينَ﴾',
+  accept:['ريب'], full:'الصواب: رَيْبَ (بدل شَكَّ)'},
+
+{id:9, type:'phrase',
+  prompt:'﴿الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الزَّكَاةَ﴾',
+  accept:['الصلاة','صلاة'], full:'الصواب: الصَّلَاةَ (بدل الزَّكَاةَ)'},
+
+{id:10, type:'phrase',
+  prompt:'﴿وَمِمَّا رَزَقْنَاهُمْ يَتَصَدَّقُونَ﴾',
+  accept:['ينفقون'], full:'الصواب: يُنْفِقُونَ (بدل يَتَصَدَّقُونَ)'},
+
+{id:11, type:'phrase',
+  prompt:'﴿وَبِالْآخِرَةِ هُمْ يَشُكُّونَ﴾',
+  accept:['يوقنون'], full:'الصواب: يُوقِنُونَ (بدل يَشُكُّونَ)'},
+
+{part:'رابعًا: اكتب', id:12, type:'phrase',
+  prompt:'اكتب آية فيها ذكر الإيمان بالغيب',
+  accept:['بالغيب'], full:'﴿الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ...﴾'},
+
+{id:13, type:'phrase',
+  prompt:'اكتب آية فيها ذكر اليقين بالآخرة',
+  accept:['يوقنون','بالآخرة هم يوقنون'], full:'﴿وَبِالْآخِرَةِ هُمْ يُوقِنُونَ﴾'},
+
+{part:'خامسًا: رتب الكلمات', id:14, type:'phrase',
+  prompt:'(المفلحون – هم – وأولئك)',
+  accept:['وأولئك هم المفلحون'], full:'وَأُولَئِكَ هُمُ الْمُفْلِحُونَ'},
+
+{id:15, type:'phrase',
+  prompt:'(ربهم – على – هدى – أولئك – من)',
+  accept:['أولئك على هدى من ربهم'], full:'أُولَئِكَ عَلَى هُدًى مِنْ رَبِّهِمْ'},
+
+{part:'سادسًا: اكتب الكلمة الناقصة', id:16, type:'phrase',
+  prompt:'﴿ذَلِكَ الْكِتَابُ لَا ________ فِيهِ هُدًى لِلْمُتَّقِينَ﴾',
+  accept:['ريب'], full:'رَيْبَ'},
+
+{id:17, type:'phrase',
+  prompt:'﴿الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ ________﴾',
+  accept:['الصلاة','صلاة'], full:'الصَّلَاةَ'},
+
+{id:18, type:'phrase',
+  prompt:'﴿وَمِمَّا رَزَقْنَاهُمْ ________﴾',
+  accept:['ينفقون'], full:'يُنْفِقُونَ'},
+
+{id:19, type:'phrase',
+  prompt:'﴿وَبِالْآخِرَةِ هُمْ ________﴾',
+  accept:['يوقنون'], full:'يُوقِنُونَ'},
+
+{part:'سابعًا: فهم الآيات', id:20, type:'attributes',
+  prompt:'ما صفات المتقين المذكورة في هذه الصفحة؟ اذكر أربع صفات باختصار.',
+  groups:[
+    ['غيب'],
+    ['صلاه','يقيمون الصلاه'],
+    ['ينفقون','انفاق','رزقناهم ينفقون'],
+    ['انزل اليك','بما انزل اليك'],
+    ['انزل من قبلك','من قبلك','الكتب السابقه'],
+    ['اخره','يوقنون']
+  ],
+  labels:['الإيمان بالغيب','إقامة الصلاة','الإنفاق مما رزقهم الله','الإيمان بما أُنزل على النبي ﷺ','الإيمان بالكتب السابقة','اليقين بالآخرة'],
+  full:'الإيمان بالغيب، إقامة الصلاة، الإنفاق مما رزقهم الله، الإيمان بما أُنزل إليه وما أُنزل من قبله، واليقين بالآخرة (يُكتفى بأربع منها).'}
+];
+
+/* ============ بناء الأسئلة في الصفحة ============ */
+const quizEl = document.getElementById('quiz');
+questions.forEach(q=>{
+  if(q.part){
+    const h = document.createElement('div');
+    h.className='part-title';
+    h.textContent = q.part;
+    quizEl.appendChild(h);
+  }
+  const wrap = document.createElement('div');
+  wrap.className='q';
+  wrap.id = 'q'+q.id;
+  const isLong = q.type==='attributes';
+  wrap.innerHTML = `
+    <div class="q-prompt"><span class="q-num">${q.id}.</span>${q.prompt}</div>
+    ${isLong
+      ? `<textarea rows="3" data-qid="${q.id}" placeholder="اكتب إجابتك هنا..."></textarea>`
+      : `<input type="text" data-qid="${q.id}" placeholder="اكتب إجابتك هنا...">`}
+    <div class="feedback" id="fb${q.id}"></div>
+  `;
+  quizEl.appendChild(wrap);
+});
+
+/* ============ التصحيح ============ */
+document.getElementById('gradeBtn').addEventListener('click', ()=>{
+  let score = 0;
+  questions.forEach(q=>{
+    const el = document.querySelector(`[data-qid="${q.id}"]`);
+    const raw = el.value || '';
+    const norm = normalize(raw);
+    const qWrap = document.getElementById('q'+q.id);
+    const fb = document.getElementById('fb'+q.id);
+    let correct = false;
+    let extra = '';
+
+    if(q.type==='phrase'){
+      correct = q.accept.some(acc => containsPhrase(norm, normalize(acc)));
+    } else if(q.type==='attributes'){
+      let matched = [];
+      q.groups.forEach((alts,idx)=>{
+        const found = alts.some(alt => normalize(norm).includes(normalize(alt)) || containsPhrase(norm, normalize(alt)));
+        if(found) matched.push(q.labels[idx]);
+      });
+      correct = matched.length>=4;
+      extra = matched.length>0
+        ? `الصفات التي ذكرتها ووُجدت: ${matched.join('، ')} (${matched.length}/4 على الأقل مطلوبة).`
+        : 'لم يتم التعرف على أي صفة واضحة في إجابتك.';
+    }
+
+    qWrap.classList.remove('correct','incorrect');
+    fb.classList.add('show');
+
+    if(raw.trim()===''){
+      qWrap.classList.add('incorrect');
+      fb.innerHTML = `<span class="tag">لم تتم الإجابة —</span> الإجابة الصحيحة: <span class="correct-ans">${q.full}</span>`;
+    } else if(correct){
+      score++;
+      qWrap.classList.add('correct');
+      fb.innerHTML = `<span class="tag">إجابة صحيحة ✓</span>${extra ? '<br>'+extra : ''}`;
+    } else {
+      qWrap.classList.add('incorrect');
+      fb.innerHTML = `<span class="tag">غير دقيقة —</span> الإجابة الصحيحة: <span class="correct-ans">${q.full}</span>${extra ? '<br>'+extra : ''}`;
+    }
+  });
+
+  const resultEl = document.getElementById('result');
+  resultEl.classList.remove('show');
+  void resultEl.offsetWidth; // إعادة تشغيل الأنيميشن
+  resultEl.classList.add('show');
+  document.getElementById('scoreText').textContent = `${score} / 20`;
+  const pct = Math.round((score/20)*100);
+  document.getElementById('pctText').textContent = `النسبة: ${pct}%`;
+  resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  document.querySelectorAll('.q input, .q textarea').forEach(el=>el.value='');
+  document.querySelectorAll('.q').forEach(el=>el.classList.remove('correct','incorrect'));
+  document.querySelectorAll('.feedback').forEach(el=>{el.classList.remove('show'); el.innerHTML='';});
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('studentName').value='';
+});
+
+document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+</script>
+</body>
+</html>
